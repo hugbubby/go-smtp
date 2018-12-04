@@ -376,7 +376,9 @@ func (c *Conn) handleData(arg string) {
 		c.WriteResponse(250, "Ok: queued")
 	}
 
-	c.reset()
+	c.locker.Lock()
+	c.msg = nil
+	c.locker.Unlock()
 }
 
 func (c *Conn) Reject() {
