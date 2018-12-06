@@ -377,7 +377,7 @@ func (c *Conn) handleData(arg string) {
 	}
 
 	c.locker.Lock()
-	c.msg = nil
+	c.msg = &message{}
 	c.locker.Unlock()
 }
 
