@@ -232,12 +232,14 @@ func (c *Conn) handleMail(arg string) {
 		}
 	}
 	from := strings.Trim(fromArgs[0], "<> ")
-	if from == "" {
+
+    //Well does this work then?
+	/*if from == "" {
         //Perhaps this opens us up to some sort of SSRF.
         //*puts on aviator shades*
         //idgaf
         from = "mattermost@leonardcyber.com"
-	}
+	}*/
 
 	// This is where the Conn may put BODY=8BITMIME, but we already
 	// read the DATA as bytes, so it does not effect our processing.
