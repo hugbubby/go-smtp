@@ -233,8 +233,10 @@ func (c *Conn) handleMail(arg string) {
 	}
 	from := strings.Trim(fromArgs[0], "<> ")
 	if from == "" {
-		c.WriteResponse(501, "3: Was expecting MAIL arg syntax of FROM:<address>: "+strings.Join(fromArgs, "---"))
-		return
+        //Perhaps this opens us up to some sort of SSRF.
+        //*puts on aviator shades*
+        //idgaf
+        from = "mattermost@leonardcyber.com"
 	}
 
 	// This is where the Conn may put BODY=8BITMIME, but we already
