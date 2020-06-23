@@ -221,19 +221,19 @@ func (c *Conn) handleMail(arg string) {
 	}
 
 	if len(arg) < 6 || strings.ToUpper(arg[0:5]) != "FROM:" {
-		c.WriteResponse(501, "Was expecting MAIL arg syntax of FROM:<address>")
+		c.WriteResponse(501, "1: Was expecting MAIL arg syntax of FROM:<address>: "+arg)
 		return
 	}
 	fromArgs := strings.Split(strings.Trim(arg[5:], " "), " ")
 	if c.server.Strict {
 		if !strings.HasPrefix(fromArgs[0], "<") || !strings.HasSuffix(fromArgs[0], ">") {
-			c.WriteResponse(501, "Was expecting MAIL arg syntax of FROM:<address>")
+			c.WriteResponse(501, "2: Was expecting MAIL arg syntax of FROM:<address>: "+strings.Join(fromArgs, "---"))
 			return
 		}
 	}
 	from := strings.Trim(fromArgs[0], "<> ")
 	if from == "" {
-		c.WriteResponse(501, "Was expecting MAIL arg syntax of FROM:<address>")
+		c.WriteResponse(501, "3: Was expecting MAIL arg syntax of FROM:<address>: "+strings.Join(fromArgs, "---"))
 		return
 	}
 
@@ -400,7 +400,7 @@ func (c *Conn) handleData(arg string) {
 
 	var (
 		code int
-		msg string
+		msg  string
 	)
 	c.msg.Reader = newDataReader(c)
 	err := c.User().Send(c.msg.From, c.msg.To, c.msg.Reader)
@@ -421,7 +421,7 @@ func (c *Conn) handleData(arg string) {
 	if c.server.LMTP {
 		// TODO: support per-recipient responses
 		for _, rcpt := range c.msg.To {
-			c.WriteResponse(code, "<" + rcpt + "> " + msg)
+			c.WriteResponse(code, "<"+rcpt+"> "+msg)
 		}
 	} else {
 		c.WriteResponse(code, msg)
